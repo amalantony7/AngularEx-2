@@ -6,12 +6,15 @@ const PORT = 3000;
 
 const app = express();
 const api = require('./routes/api');
+const studApi = require('./routes/api1');
 
 app.use(bodyParser.json());
 
 app.use(cors());
 
 app.use('/api', api);
+
+app.use('/api1',studApi);
 
 app.get('/' , function (req, res){
     res.send("Hello from server!")

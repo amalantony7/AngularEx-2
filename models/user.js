@@ -9,5 +9,6 @@ const userSchema = new schema({
     phone : Number
 })
 
-module.exports = mongoose.model('user',userSchema,'users'); //model from schema.. user = model_name,
-                                                            // users = collection in database
+module.exports = mongoose.model('user',userSchema,'users'); 
+//model from schema.. user = model_name(can be any name),
+// users = collection in database

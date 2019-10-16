@@ -7,6 +7,8 @@ const User = require('../models/user');
 //connection string from mongoDB atlas
 const db ="mongodb+srv://useramal:user123@cluster0-ezoh7.mongodb.net/test?retryWrites=true&w=majority";
 
+var responseObject = [];
+
 //connection to db
 mongoose.connect(db, err => {
     if(err){
@@ -56,12 +58,27 @@ router.post('/login', (req,res) => {
             }
             else{
                 let payload = {subject : user._id};
-                let token = jwt.sign(payload, 'secretKey');
+                let token = jwt.sign(payload, 'secretKey' , {"expiresIn" : 1800});
                 res.status(200).send({token});
             }
         }
     })
 })
+
+router.get('/employees', (req, res)=>{
+    User.find({}, (err, foundData)=>{
+      if(err){
+        console.log("Error! " + err);
+        res.status(500).send("Couldn't read data from Database!");
+      }
+      else{
+          responseObject = foundData;
+          res.status(200).send(responseObject);
+        }
+      })
+    })
+
+
 
 function verifyToken(req, res, next){
   if(!req.headers.authorization){
@@ -71,12 +88,16 @@ function verifyToken(req, res, next){
   if(token === "null"){
     return res.status(401).send("Unauthorized Request!")
   }
-  let payload = jwt.verify(token , 'secretKey')
-  if(!payload){
-    return res.status(401).send("Unauthorized Request!")
-  }
-  req.userId = payload.subject
-  next()
+  jwt.verify(token , 'secretKey', (err,decoded)=>{
+    if(err){
+      return res.status(401).send("Token Expired!")
+    }
+    else {
+      req.userId = decoded.subject
+      next()
+    }
+  })
+  
 }
 
 
@@ -162,6 +183,49 @@ router.get('/special', verifyToken, (req,res)=>{
     ];
     res.json(special);
 })
+
+router.get('/cars' , (req,res)=>{
+    let cars = [
+      {
+        "_id" : "1",
+        "name" : "MG Hector",
+        "des" : "lorem ipsum",
+        "color" : 'Blue'
+      },
+      {
+        "_id" : "2",
+        "name": "Ford",
+        "des" : "lorem ipsum",
+        "color": 'Brown'
+      },
+      {
+        "_id" : "3",
+        "name": "Kia",
+        "des" : "lorem ipsum",
+        "color": 'Grey'
+      },
+      {
+        "_id" : "4",
+        "name": "BMW",
+        "des" : "lorem ipsum",
+        "color": 'Red'
+      },
+      {
+        "_id" : "5",
+        "name": "Jaguar",
+        "des" : "lorem ipsum",
+        "color": 'Silver'
+      },
+      {
+        "_id" : "6",
+        "name": "Jeep",
+        "des" : "lorem ipsum",
+        "color": 'Black'
+      }
+    ];
+    res.json(cars);
+})
+
 
 module.exports = router;
 
