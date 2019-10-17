@@ -73,10 +73,23 @@ router.get('/employees', (req, res)=>{
       }
       else{
           responseObject = foundData;
+          
           res.status(200).send(responseObject);
         }
       })
     })
+
+router.get('/employees/:name', (req, res)=>{
+  User.findById(req.params.id)
+      .then(foundData =>{
+        if(!foundData) {
+          return res.status(404).send("User not Found");
+        }
+        else{
+          return res.status(200).json.foundData;
+        }
+      })
+})    
 
 
 
