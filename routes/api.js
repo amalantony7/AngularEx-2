@@ -79,17 +79,20 @@ router.get('/employees', (req, res)=>{
       })
     })
 
-router.get('/employees/:name', (req, res)=>{
-  User.findById(req.params.id)
-      .then(foundData =>{
-        if(!foundData) {
-          return res.status(404).send("User not Found");
+    router.get('/employee', (req, res)=>{   
+      User.find({email: req.query.email}, (err, foundData)=>{
+        if(err){
+          console.log("Error! " + err);
+          res.status(500).send("Couldn't read data from Database!");
         }
         else{
-          return res.status(200).json.foundData;
-        }
+            responseObject = foundData;
+            
+            res.status(200).send(responseObject);
+          }
+        })
       })
-})    
+  
 
 
 

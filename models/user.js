@@ -9,7 +9,7 @@ const userSchema = new schema({
     place : String,
     email : String,
     password : String,
-    department : String,
+    empDep : String,
     phone : Number
 })
 
