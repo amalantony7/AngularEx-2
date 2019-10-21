@@ -65,6 +65,8 @@ router.post('/login', (req,res) => {
     })
 })
 
+
+//get all records from database
 router.get('/employees', (req, res)=>{
     User.find({}, (err, foundData)=>{
       if(err){
@@ -79,6 +81,8 @@ router.get('/employees', (req, res)=>{
       })
     })
 
+
+   //search a record from database 
     router.get('/employee', (req, res)=>{   
       User.find({email: req.query.email}, (err, foundData)=>{
         if(err){
@@ -92,6 +96,19 @@ router.get('/employees', (req, res)=>{
           }
         })
       })
+
+  
+      router.delete('/delete', (req, res)=>{   
+        User.deleteOne({email: req.query.email}, (err, foundData)=>{
+          if(err){
+            console.log("Error! " + err);
+            res.status(500).send("Couldn't read data from Database!");
+          }
+          else{            
+              res.status(200).send();
+            }
+          })
+        })    
   
 
 
